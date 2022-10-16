@@ -17,10 +17,6 @@
 ## Usage
 
 ```shell
-$ git clone
-$ cd ShoGoSs-rust
-
-
 $ cat example_input/nipo
 --,--,--,--,--,pa,--,--,--
 --,PA,--,--,--,--,--,--,--
@@ -31,6 +27,7 @@ $ cat example_input/nipo
 --,--,--,--,--,--,--,--,--
 --,--,--,--,--,--,--,--,--
 --,--,--,--,--,--,--,--,--
+
 $ cargo run example_input/nipo
 Judgement result:
 LoseReason { player: Black, cause: TwoPawn { coords: [Coord { x: 5, y: 0 }, Coord { x: 5, y: 4 }] } }
@@ -46,6 +43,7 @@ go,go,GO,KO,GO,go,--,--,--
 --,--,--,--,--,--,--,--,--
 --,--,--,--,--,--,--,--,--
 --,--,--,--,--,--,--,--,--
+
 $ cargo run example_input/kakoi
 Judgement result:
 LoseReason { player: White, cause: Tori { coord_king: Coord { x: 3, y: 3 } } }
