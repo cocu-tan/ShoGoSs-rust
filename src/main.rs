@@ -1,8 +1,12 @@
 use std::collections::{HashMap, HashSet};
 use std::fmt::format;
-use std::fs::read;
-use std::io::BufRead;
+use std::fs::{File, read};
+use std::io::{BufRead, BufReader};
+use std::path::{Path, PathBuf};
 use std::str::FromStr;
+
+use clap::Parser;
+
 use crate::MovableCondition::{IfEmptyAndInitialPawn, IfEnemy, Normal};
 
 #[derive(Eq, PartialEq, Copy, Clone, Hash, Debug)]
@@ -273,7 +277,7 @@ impl Judgement {
             }
         }
 
-        // Checks kakoi.
+        // Checks tori.
         for (c_king, p_king) in kings.iter() {
             if (is_kakoware(&self.board, c_king)) {
                 result.push(LoseReason::new(p_king.player, LoseCause::Tori { coord_king: **c_king }));
@@ -487,16 +491,29 @@ fn _get_fixed_relative_reachable(pt: PieceType) -> Vec<((XCoord, YCoord), Movabl
 }
 
 
-fn main() {
-    let mut board_str: Vec<Vec<String>> = Vec::new();
+#[derive(Parser, Debug)]
+#[command(author, version, about, long_about = None)]
+struct Args {
+    /// Path to ShoGoSs board text file
+    path: PathBuf,
+}
 
-    for line in std::io::stdin().lock().lines() {
-        let row: Vec<String> = line.expect("np to read string from stdin").to_string()
-            .split(",").map(|s| s.to_string().replace("\n", "")).collect();
+fn main() {
+    let args: Args = Args::parse();
+
+    let path: BufReader<_> = BufReader::new(File::open(args.path).unwrap());
+
+    let mut board_str: Vec<Vec<String>> = Vec::new();
+    for line in path.lines() {
+        let string = line.expect("np to read string from stdin").to_string();
+        if string.trim().is_empty() {
+            continue;
+        }
+        let row: Vec<String> = string.split(",").map(|s| s.to_string().replace("\n", "")).collect();
         assert!(row.len() == 9, "Each row must have 9 elements");
         board_str.push(row);
     };
-    assert!(board_str.len() == 9);
+    assert!(board_str.len() == 9, "{:?}", board_str);
     let board = parse_board(board_str);
     let judgement = Judgement::new(board);
     let results = judgement.check();
@@ -530,6 +547,7 @@ macro_rules! board {
 #[cfg(test)]
 mod tests__check_two_pawn {
     use std::str::FromStr;
+
     use crate::{Coord, Judgement, LoseCause, LoseReason, Player};
 
     #[test]
@@ -676,6 +694,7 @@ mod tests__check_two_pawn {
 #[cfg(test)]
 mod tests__reachable_table {
     use std::str::FromStr;
+
     use crate::{Coord, gen_pawn_counts, gen_reachable_table, Judgement, LoseCause, LoseReason, Player};
 
     #[test]
