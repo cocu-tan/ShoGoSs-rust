@@ -1,8 +1,18 @@
-# しょ碁ス (ShoGoSs) ソルバー
+# しょ碁ス (ShoGoSs) 勝敗判定機 (ソルバー?)
+
+## What is this.
+
+- A solver for a game in VRChat mixing Shogi, Go and chess.
+    - https://shogos-app.web.app/
+    - https://vrchat.com/home/world/wrld_c7860c60-5ed3-4f67-9c5f-263b193eda31
 
 ## Features
 
-- 盤面からどっちが勝っているかを出力する
+- 盤面から勝敗がついているかを理由付きで出力する
+
+### Features plans
+
+- いいかんじに探索していいかんじに積んでることを示すとか。
 
 ## Usage
 
